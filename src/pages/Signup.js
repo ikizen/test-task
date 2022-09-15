@@ -1,10 +1,13 @@
 // import HeaderComponent from "../components/header";
 // import SignUpComponent from "../components/signUp";
+import React from "react";
 
-export default function SignUp() {
+const Signup = () => {
     return (
         <>
-            
+            <div>Sign up page</div>
         </>
     );
-}
+};
+
+export default Signup;
