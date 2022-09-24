@@ -2,19 +2,16 @@
 // import SignUpComponent from "../components/signUp";
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import axios from "axios";
 
-const apiKey = "e22fa91464c54b69b67706e4d04a729e";
-const apiURL = "https://emailvalidation.abstractapi.com/v1/" + apiKey;
+const apiURL =
+    "https://emailvalidation.abstractapi.com/v1/?api_key=e22fa91464c54b69b67706e4d04a729e";
 
 const sendEmailValidationRequest = async (email) => {
     try {
-        const response = await axios.get(apiURL, {
-            api_key: apiKey,
-            email,
-        });
+        const response = await axios.get(apiURL + "&email=" + email);
         return response.data.is_valid_format.value;
     } catch (error) {
         throw error;
@@ -28,13 +25,13 @@ const handleValidateEmail = async (email) => {
 
 const Signup = () => {
     const [email, setEmail] = useState("");
-    const [validEmail, setValidEmail] = useState(false);
     const errors = {};
+    const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log("submitted in sign up page!");
-    };
+    // const handleSubmit = (event) => {
+    //     event.preventDefault();
+    //     console.log("submitted in sign up page!");
+    // };
 
     return (
         <div className="login bg-[#111827] min-h-screen h-full flex flex-col justify-center items-center text-white ">
@@ -43,23 +40,16 @@ const Signup = () => {
             </div>
             <Formik
                 initialValues={{ email: "" }}
-                validate={async (values) => {
-                    const validated = await handleValidateEmail(values.email);
-                    if (!validated) {
-                        errors.email = "Invalid email";
-                    } else {
-                        errors.email = "";
-                        console.log("SUBMITTED!", values.email);
-                    }
-                    return errors;
-                }}
                 onSubmit={async (values) => {
                     const validated = await handleValidateEmail(values.email);
                     if (!validated) {
                         errors.email = "Invalid email";
                     } else {
                         errors.email = "";
+                        const requestEmail = values.email;
+                        const json = JSON.stringify(requestEmail);
                         console.log("SUBMITTED! ", JSON.stringify(values));
+                        navigate("/home");
                     }
                 }}
             >
