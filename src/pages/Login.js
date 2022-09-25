@@ -5,6 +5,9 @@ import React, { useState, useEffect, useRef } from "react";
 import "../App.css";
 import axios from "axios";
 import { redirect } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../store/auth-slice";
+
 // import SignUp from "./Signup";
 // import Info from "../api/usersList";
 // import Post from "../api/post";
@@ -27,6 +30,12 @@ export function Login() {
     const [validEmail, setValidEmail] = useState(0);
     const [login, setLogin] = useState(false);
     const navigate = useNavigate();
+    const selector = useSelector((state) => state.login);
+    const dispatch = useDispatch();
+
+    const Auth = () => {
+        dispatch(authActions.login());
+    };
 
     const userList = () => {
         const USERS_LIST = axios
@@ -67,14 +76,6 @@ export function Login() {
             );
     };
 
-    const Login = (details) => {
-        console.log(details);
-    };
-
-    const Logout = () => {
-        console.log("Logout");
-    };
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         let status;
@@ -90,6 +91,7 @@ export function Login() {
                     const configData = response.config.data;
                     if (status === 200) {
                         navigate("/home");
+                        dispatch(authActions.login());
                     }
                     // console.log(validEmail);
 

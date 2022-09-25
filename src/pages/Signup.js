@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/auth-slice";
 
 const apiURL =
     "https://emailvalidation.abstractapi.com/v1/?api_key=e22fa91464c54b69b67706e4d04a729e";
@@ -27,6 +29,7 @@ const Signup = () => {
     const [email, setEmail] = useState("");
     const errors = {};
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // const handleSubmit = (event) => {
     //     event.preventDefault();
@@ -50,6 +53,8 @@ const Signup = () => {
                         const json = JSON.stringify(requestEmail);
                         console.log("SUBMITTED! ", JSON.stringify(values));
                         navigate("/home");
+
+                        dispatch(authActions.login());
                     }
                 }}
             >
