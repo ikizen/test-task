@@ -13,15 +13,12 @@ import { authActions } from "../store/auth-slice";
 // import Post from "../api/post";
 
 const URL = "https://reqres.in/api/login";
-const URL_PAGE1 = "https://reqres.in/api/users?page=1";
-const URL_PAGE2 = "https://reqres.in/api/users?page=2";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 export function Login() {
     // const [user, setUser] = useState();
-    const result = [];
     const userRef = React.useRef();
     const errRef = React.useRef();
 
@@ -30,50 +27,10 @@ export function Login() {
     const [validEmail, setValidEmail] = useState(0);
     const [login, setLogin] = useState(false);
     const navigate = useNavigate();
-    const selector = useSelector((state) => state.login);
     const dispatch = useDispatch();
 
     const Auth = () => {
         dispatch(authActions.login());
-    };
-
-    const userList = () => {
-        const USERS_LIST = axios
-            .all([axios.get(URL_PAGE1), axios.get(URL_PAGE2)])
-            .then(
-                axios.spread((obj1, obj2) => {
-                    // Both requests are now complete
-                    const page1 = obj1.data.data;
-                    const page2 = obj2.data.data;
-                    const page = [...page1, ...page2];
-                    // console.log(page);
-                    const list = page.map((elem) => {
-                        result.push(elem.email);
-                        // const result = [...email.email];
-                        // console.log(result);
-                    });
-                    // console.log(obj1.data.data);
-                    // console.log(obj2.data.data);
-                })
-            );
-        // console.log(USERS_LIST);
-        console.log(result);
-    };
-
-    const Post = () => {
-        axios
-            .post(URL, {
-                email: user,
-                password: pwd,
-            })
-            .then(
-                (response) => {
-                    console.log(response.status);
-                },
-                (error) => {
-                    console.log(error);
-                }
-            );
     };
 
     const handleSubmit = async (event) => {
@@ -88,6 +45,7 @@ export function Login() {
             .then(
                 (response) => {
                     status = response.status;
+                    console.log(response);
                     const configData = response.config.data;
                     if (status === 200) {
                         navigate("/home");
