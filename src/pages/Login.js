@@ -28,10 +28,15 @@ export function Login() {
     const [login, setLogin] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [items, setItems] = useState([]);
 
     const Auth = () => {
         dispatch(authActions.login());
     };
+
+    useEffect(() => {
+        localStorage.setItem(user, JSON.stringify(user));
+    }, [user]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -99,7 +104,13 @@ export function Login() {
                             placeholder="frodo@baggins.com"
                             // required
                             autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
+                            onChange={(e) => {
+                                setUser(e.target.value);
+                                localStorage.setItem(
+                                    user,
+                                    JSON.stringify(user)
+                                );
+                            }}
                         />
                     </label>
                     <label
