@@ -1,4 +1,4 @@
-import react from "react";
+import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import AllUsers from "../store/allUsers";
