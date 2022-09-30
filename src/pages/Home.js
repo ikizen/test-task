@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import AllUsers from "../store/allUsers";
 import { Link } from "react-router-dom";
-import { User } from "@doist/todoist-api-typescript";
+// import { User } from "@doist/todoist-api-typescript";
 
 const URL_PAGE = "https://reqres.in/api/users";
 
@@ -24,7 +24,7 @@ const Home = () => {
         await axios.get(`${URL_PAGE}?page=${page}`).then((response) => {
             const user = response.data.data;
             console.log(response.data);
-            console.log(User);
+            // console.log(User);
             // const products = data;
             setReqResUsers(user);
         });
