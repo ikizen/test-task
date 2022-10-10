@@ -1,22 +1,19 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import AllUsers from "../store/allUsers";
+// import AllUsers from "../store/allUsers";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 // import { User } from "@doist/todoist-api-typescript";
+import { authActions } from "../store/auth-slice";
+import { hasToken } from "../store/hasToken";
 
 const URL_PAGE = "https://reqres.in/api/users";
 
 const Home = () => {
-    const result = [];
-
-    const [email, setEmail] = useState("");
+    const token = useSelector((state) => state.auth.token);
     const [page, setPage] = useState(1);
-
-    useEffect(() => {
-        // userList();
-        // page1();
-    }, []);
+    const dispatch = useDispatch();
 
     const [reqResUsers, setReqResUsers] = useState([]);
 
@@ -24,17 +21,19 @@ const Home = () => {
         await axios.get(`${URL_PAGE}?page=${page}`).then((response) => {
             const user = response.data.data;
             console.log(response.data);
-            // console.log(User);
-            // const products = data;
             setReqResUsers(user);
         });
-        // console.log(products);
     };
 
     useEffect(() => {
         fetchUsers();
     }, [page]);
 
+    const hasToken = () => {
+        let flag = false;
+        localStorage.getItem("token") ? (flag = true) : (flag = false);
+        return flag;
+    };
     return (
         <section className="bg-[#111827] min-h-screen h-full text-white">
             <nav className="flex flex-row">

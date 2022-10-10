@@ -1,16 +1,12 @@
-// import Register from "./Register";
-// import eact from "react";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import axios from "axios";
-import { redirect } from "react-router-dom";
+// import { redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../store/auth-slice";
-
-// import SignUp from "./Signup";
-// import Info from "../api/usersList";
-// import Post from "../api/post";
+import { hasToken } from "../store/hasToken";
+// import { user } from "../store/usersState";
 
 const URL = "https://reqres.in/api/login";
 
@@ -18,30 +14,15 @@ const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 export function Login() {
-    // const [user, setUser] = useState();
-    const userRef = React.useRef();
-    const errRef = React.useRef();
-
     const [user, setUser] = useState("");
     const [pwd, setPwd] = useState("");
-    const [validEmail, setValidEmail] = useState(0);
-    const [login, setLogin] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [items, setItems] = useState([]);
-
-    const Auth = () => {
-        dispatch(authActions.login());
-    };
-
-    useEffect(() => {
-        localStorage.setItem(user, JSON.stringify(user));
-    }, [user]);
+    const [token, setToken] = useState("");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         let status;
-        // console.log(user, pwd);
         const request = axios
             .post(URL, {
                 email: user,
@@ -50,39 +31,22 @@ export function Login() {
             .then(
                 (response) => {
                     status = response.status;
-                    console.log(response);
+                    // setToken(JSON.stringify(response.data.token));
+                    const tokenResponse = JSON.stringify(response.data.token);
                     const configData = response.config.data;
-                    if (status === 200) {
-                        navigate("/home");
-                        dispatch(authActions.login());
-                    }
-                    // console.log(validEmail);
 
-                    console.log(status);
-                    // console.log(configData);
+                    if (status === 200) {
+                        localStorage.setItem("token", tokenResponse);
+                        dispatch(authActions.login(tokenResponse));
+                        navigate("/home");
+                    }
                 },
                 (error) => {
                     console.log(error);
                 }
             );
-
         await request;
-        setValidEmail(status);
-
-        if (validEmail === 200) {
-            setLogin(true);
-        }
-        console.log(validEmail);
-        // console.log(login);
         console.log(`You loged in with this email: "${user}"`);
-    };
-
-    const [inputs, setInputs] = useState({});
-
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs((values) => ({ ...values, [name]: value }));
     };
 
     return (
@@ -106,10 +70,6 @@ export function Login() {
                             autoComplete="off"
                             onChange={(e) => {
                                 setUser(e.target.value);
-                                localStorage.setItem(
-                                    user,
-                                    JSON.stringify(user)
-                                );
                             }}
                         />
                     </label>
@@ -123,7 +83,6 @@ export function Login() {
                             id="password"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                             placeholder="Enter password"
-                            // required
                             onChange={(e) => setPwd(e.target.value)}
                         />
                     </label>
@@ -131,10 +90,6 @@ export function Login() {
                     <button
                         type="submit"
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-1 mr-2 mt-2 mb-2"
-                        // type="button"
-                        // onClick={Post}
-                        // onSubmit={handleSubmit}
-                        // onSubmit={() => console.log("submitted nahui")}
                     >
                         Log in
                     </button>

@@ -1,15 +1,22 @@
 import "./App.css";
 import React from "react";
-import { useState } from "react";
+import { useEffect } from "react";
 import { Login } from "./pages/Login";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "./store/auth-slice";
 
-function App() {
-    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+function App({ component: Component, ...rest }) {
+    const dispatch = useDispatch();
+    const isLoggedIn = useSelector((state) => !!state.auth.token);
     console.log(`isLoggedIn is now have state: ${isLoggedIn}`);
+
+    useEffect(() => {
+        const result = localStorage.getItem("token");
+        dispatch(authActions.login(result));
+    }, []);
 
     return (
         <BrowserRouter>
